@@ -1,0 +1,46 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" >
+  <a class="navbar-brand" href="{% url 'post_list' %}">Tunechi</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+        <form class="form-inline my-2 my-lg-0" action="{% url 'post_list' %}">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="q">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+    </ul>
+      <ul class="navbar-nav">
+        {% if request.user.is_authenticated %}
+
+        <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          {% if request.user.profile.photo %}
+            <img src="{{ request.user.profile.photo.url }}" class="navbar-img">
+          {% else %}
+            <img src="/media/default.jpg" class="navbar-img">
+          {% endif %}
+          <span>Hi {{ request.user|capfirst }}</span>
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="{% url 'web:edit_profile' %}">My Profile</a>
+          <a class="dropdown-item" href="{% url 'web:post_create' %}">Post Create</a>
+          <a class="dropdown-item" href="{% url 'web:post_favourite_list' %}">Favourite</a>
+          <a class="dropdown-item" href="{% url 'user_logout' %}">Logout</a>
+        </div>
+        </li>
+
+        {% else %}
+
+        <li class="nav-item">
+              <a href="{% url 'login' %}" class="nav-link">Login |</a>
+        </li>
+        <li class="nav-item">
+              <a href="{% url 'register' %}" class="nav-link">Register </a>
+        </li>
+        {% endif %}
+      </ul>
+
+  </div>
+</nav>

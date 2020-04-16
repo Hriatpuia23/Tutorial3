@@ -1,0 +1,2 @@
+Two spaces - Type &ensp; 
+Four spaces - Type &emsp; 

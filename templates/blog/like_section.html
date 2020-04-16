@@ -1,0 +1,17 @@
+ &ensp;{{ total_likes }}
+{% if request.user.is_authenticated %}
+    {% if is_liked %}
+         <a href="{% url 'like_post' %}" id="like" name="post_id" value="{{ post.id }}">
+               <i class="fas fa-thumbs-up fa-lg"></i>
+         </a>
+    {% else %}
+        <a href="{% url 'like_post' %} " id="like" name="post_id" value="{{ post.id }}">
+                <i class="far fa-thumbs-up fa-lg"></i>
+        </a>
+    {% endif %}
+{% endif %}
+
+<!--
+ Dislike{{ total_likes|pluralize }}
+like{{ total_likes|pluralize }}
+-->

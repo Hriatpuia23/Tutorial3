@@ -1,0 +1,73 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}{{ post.title }} | {{ block.super }}{% endblock %}
+
+{% block content %}
+{% include 'blog/alerts.html' %}
+        <span>
+            {% if post.author.profile.photo %}
+                <img src="{{ post.author.profile.photo.url }}"  style="width:90px;height:100px;"  class="navbar-img">
+            {% else %}
+                <img src="/media/default.jpg" class="navbar-img">
+            {% endif %}
+        </span><br>
+        <h3>{{ post.title }}</h3>
+        <small>Post created by: {{ post.author }}</small>
+        <hr>
+        <p>{{ post.body }}</p>
+        <a href="{{ post.url_address }}" target="_blank">{{ post.url_address }}</a>
+        <div class="row gallery">
+                {% for p in post.images_set.all %}
+                        <div class="col-md-3">
+                                <img src="{{ p.image.url }}" alt="Images Not Found" class="img-thumbnail">
+                        </div>
+                {% endfor %}
+        </div>
+
+        <div class="row" class="collapse">
+        <div id="like-section">
+            {% include 'blog/like_section.html' %}
+        </div>
+
+        {% if request.user.is_authenticated %}
+
+        <div id="favourite-section">
+            &ensp;
+            {% if is_favourite %}
+            <a href="{% url 'web:favourite_post' pk=post.id %}">
+                 <i class="fas fa-heart fa-lg"></i>
+            </a>
+            {% else %}
+            <a href="{% url 'web:favourite_post' pk=post.id %}">
+                 <i class="far fa-heart fa-lg"></i>
+            </a>
+            {% endif %}
+        </div>
+        {% endif %}
+        </div>
+
+
+        {% if post.author == request.user %}
+
+        <div class="section-1" style="float:right;">
+                <a href="{% url 'web:post_edit' pk=post.id %}">
+                        <button type="button" class="btn btn-outline-success">Edit</button>
+                </a>
+                <a href="{% url 'web:post_delete' pk=post.id %}" id="delete">
+                        <button type="button" class="btn btn-danger">Delete</button>
+                </a>
+        </div>
+
+        {% endif %}
+
+
+        <br><br>
+        <hr>
+
+        {% if not post.restrict_comment %}
+        <div class="main-comment-section">
+           {% include 'blog/comments.html' %}
+        </div>
+        {% endif %}
+
+{% endblock %}
