@@ -24,7 +24,7 @@ def post_list(request):
             Q(author__username=query) |
             Q(body__icontains=query)
         )
-    paginator = Paginator(post_list, 5)
+    paginator = Paginator(post_list, 6)
     page = request.GET.get('page')
     try:
         posts = paginator.page(page)
@@ -305,3 +305,15 @@ class UserPostListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         user = get_object_or_404(User, username=self.kwargs.get('username'))
         return Post.published.filter(author=user).order_by('-id')
+
+
+class MyPost(LoginRequiredMixin, ListView):
+    model = Post
+    template_name = 'blog/my_post.html'  # <app>/<model>_<viewtype>.html
+    context_object_name = 'posts'
+    ordering = ['-id']
+    paginate_by = 4
+
+    def get_queryset(self):
+        user = get_object_or_404(User, username=self.request.user)
+        return Post.objects.filter(author=user).order_by('-id')

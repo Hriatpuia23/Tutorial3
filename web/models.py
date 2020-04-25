@@ -71,20 +71,18 @@ def create_profile(sender, instance, created, **kwargs):
 def save_profile(sender, instance, **kwargs):
     instance.profile.save()
 
-
-@receiver(pre_save, sender=Profile)
-def delete_profile_old(sender, instance, **kwargs):
-    if not instance.pk:
-        return False
-    try:
-        old_file = sender.objects.get(pk=instance.pk).photo
-    except sender .DoesNotExist:
-        return False
-
-    new_file = instance.photo
-    if not old_file == new_file:
-        if os.path.isfile(old_file.path):
-            os.remove(old_file.path)
+#
+# @receiver(pre_save, sender=Profile)
+# def delete_file_on_change_extension(sender, instance, **kwargs):
+#     if instance.pk:
+#         try:
+#             old_avatar = sender.objects.get(pk=instance.pk).photo
+#         except sender.DoesNotExist:
+#             return
+#         else:
+#             new_avatar = instance.photo
+#             if old_avatar.url != new_avatar.url:
+#                 old_avatar.delete(save=False)
 
 
 class Images(models.Model):
@@ -95,26 +93,26 @@ class Images(models.Model):
         return self.post.title + "Image"
 
 
-@receiver(post_delete, sender=Images)
-def deleted_file_delete(sender, instance, **kwargs):
-    if instance.image:
-        if os.path.isfile(instance.image.path):
-            os.remove(instance.image.path)
+# @receiver(post_delete, sender=Images)
+# def deleted_file_delete(sender, instance, **kwargs):
+#     if instance.image:
+#         if os.path.isfile(instance.image.path):
+#             os.remove(instance.image.path)
 
 
-@receiver(pre_save, sender=Images)
-def delete_profile_old(sender, instance, **kwargs):
-    if not instance.pk:
-        return False
-    try:
-        old_file = sender.objects.get(pk=instance.pk).image
-    except sender .DoesNotExist:
-        return False
-
-    new_file = instance.image
-    if not old_file == new_file:
-        if os.path.isfile(old_file.path):
-            os.remove(old_file.path)
+# @receiver(pre_save, sender=Images)
+# def delete_profile_old(sender, instance, **kwargs):
+#     if not instance.pk:
+#         return False
+#     try:
+#         old_file = sender.objects.get(pk=instance.pk).image
+#     except sender .DoesNotExist:
+#         return False
+#
+#     new_file = instance.image
+#     if not old_file == new_file:
+#         if os.path.isfile(old_file.path):
+#             os.remove(old_file.path)
 
 
 class Comment(models.Model):

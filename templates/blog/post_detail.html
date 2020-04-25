@@ -4,6 +4,7 @@
 
 {% block content %}
 {% include 'blog/alerts.html' %}
+
         <span>
             {% if post.author.profile.photo %}
                 <img src="{{ post.author.profile.photo.url }}"  style="width:90px;height:100px;"  class="navbar-img">
@@ -14,13 +15,15 @@
         <h3>{{ post.title }}</h3>
         <small>Post created by: {{ post.author }}</small>
         <hr>
-        <p>{{ post.body }}</p>
+        <center>{{ post.body|linebreaks }}</center>
         <a href="{{ post.url_address }}" target="_blank">{{ post.url_address }}</a>
         <div class="row gallery">
                 {% for p in post.images_set.all %}
+                {% if p.image %}}
                         <div class="col-md-3">
                                 <img src="{{ p.image.url }}" alt="Images Not Found" class="img-thumbnail">
                         </div>
+                {% endif %}
                 {% endfor %}
         </div>
 

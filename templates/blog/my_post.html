@@ -1,0 +1,92 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Welcome to {{ block.super }}{% endblock %}
+
+{% block content %}
+{% include 'blog/alerts.html' %}
+
+    <h1 class="mb-3">Posts by {{ view.kwargs.username }} ({{ page_obj.paginator.count}})</h1>
+    <div class="row">
+            {% for p in posts %}
+            <div class="col-md-6">
+                <div class="img-thumbnail">
+                     {% if p.author.profile.photo %}
+                        <img src="{{ p.author.profile.photo.url }}" class="navbar-img">
+                    {% else %}
+                        <img src="/media/default.jpg" class="navbar-img">
+                    {% endif %}
+
+                    {{ p.author }} <br>
+                    <small>{{ p.created }}</small><br>
+                    {{ p.title }}<br>
+                    <div style="height: 50px; overflow: hidden;">
+                        {{ p.body }}
+                    </div>
+                    <a href="{% url 'web:post_detail' p.id p.slug %}">&ensp;...See more</a> </div>
+                <br>
+            </div>
+            {% empty %}
+                <div class="container-fluid">
+                    <h3>No Posts Found having search query "{{ request.GET.q }}"</h3>
+                </div>
+            {% endfor %}
+    </div>
+<!--<div class="pagination">-->
+<!--    <span class="step-links">-->
+<!--        {% if page_obj.has_previous %}-->
+<!--            <a href="?page=1">&laquo; first</a>-->
+<!--            <a href="?page={{ page_obj.previous_page_number }}">previous</a>-->
+<!--        {% endif %}-->
+
+<!--        <span class="current">-->
+<!--            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.-->
+<!--        </span>-->
+
+<!--        {% if page_obj.has_next %}-->
+<!--            <a href="?page={{ page_obj.next_page_number }}">next</a>-->
+<!--            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>-->
+<!--        {% endif %}-->
+<!--    </span>-->
+<!--</div>-->
+    <ul class="pagination">
+        {% if page_obj.number == 1 %}
+        <li class="page-item disabled">
+                <a class="page-link" href="?page=1">First</a>
+        </li>
+        {% else %}
+          <li class="page-item">
+                <a class="page-link" href="?page=1">First</a>
+          </li>
+        {% endif %}
+
+        {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a href="?page={{ page_obj.previous_page_number }}" class="page-link">&laquo;</a>
+            </li>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+            {% elif num < page_obj.number|add:'3' and num > page_obj.number|add:'-3' %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+            {% endif %}
+        {% endfor %}
+
+
+         {% if page_obj.has_next %}
+            <li class="page-item">
+                <a href="?page={{ page_obj.next_page_number }}" class="page-link">&raquo;</a>
+            </li>
+        {% endif %}
+
+
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }} ">Last</a>
+            </li>
+    </ul>
+{% endblock content %}

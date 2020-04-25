@@ -5,13 +5,39 @@ html{
 
 body {
     font-family: 'Lucida Casaul', 'Comic Sans MS';
+    margin-bottom: 150px;
 }
 
-.navbar-img{
-    width:30px;
-    height:35px;
+.navbar-img {
+    width:40px;
+    height:45px;
+    border-radius: 50%;
     float:left;
     background-size:auto 100%;
     margin-top: -5px;
     margin-right: 5px;
+}
+
+.gallery{
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.gallery .img-thumbnail{
+    height: 250px;
+    width: 300px;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 130px;
+    padding: 15px;
+    background-color: #2C3E50;
+}
+
+.hpa {
+    text-align: justify;
 }

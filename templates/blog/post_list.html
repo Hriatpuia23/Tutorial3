@@ -10,17 +10,16 @@
             <div class="col-md-6">
                 <div class="img-thumbnail">
                     {% if p.author.profile.photo %}
-                        <img src="{{ p.author.profile.photo.url }}" class="navbar-img">
+                        <center><img src="{{ p.author.profile.photo.url }}" class="navbar-img"></center>
                     {% else %}
                         <img src="/media/default.jpg" class="navbar-img">
                     {% endif %}
                     <a href="{% url 'web:user_posts' p.author.username %}">{{ p.author }}</a> <br>
                     <small>{{ p.created }}</small><br>
                     {{ p.title }}<br>
-                    <div style="height: 50px; overflow: hidden;">
-                        {{ p.body }}
-                    </div>
+                    <center>{{ p.body|truncatechars:150|linebreaks }}
                     <a href="{% url 'web:post_detail' p.id p.slug %}">&ensp;...See more</a>
+                    </center>
                 </div>
                 <br>
             </div>

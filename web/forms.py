@@ -54,8 +54,7 @@ class UserRegistrationForm(UserCreationForm):
             # 'first_name',
             # 'last_name',
             'email',
-        )        #     password = self.cleaned.data.get('password')
-
+        )        # password = self.cleaned.data.get('password')
 
         # def clean_confirm_password(self):
         #     confirm_password = self.cleaned_data.get('confirm_password')
@@ -66,6 +65,10 @@ class UserRegistrationForm(UserCreationForm):
 
 class UserEditForm(forms.ModelForm):
     # username = forms.CharField(widget=forms.TextInput(attrs={'readonly':'readonly'}))
+    username = forms.CharField(help_text=" Space telh theih loh!!! "
+                                         "(No white space!) Required. 150 characters or fewer. Letters,"
+                                         " digits and @/./+/-/_ "
+                                         "only.")
 
     class Meta:
         model = User
