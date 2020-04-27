@@ -2,13 +2,10 @@
 {% block title %}{{ post.title }}|Edit{% endblock %}
 {% block content %}
 {% include 'blog/alerts.html' %}
+
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    {{ form.as_p }}
-    {{ formset.management_form }}
-    {% for f in formset %}
-        {{ f.as_p }}
-    {% endfor %}
+    {{  form.as_p }}
     <input type="submit" value="Update" class="btn btn-success">
 </form>
 {% endblock %}

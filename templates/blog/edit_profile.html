@@ -1,6 +1,25 @@
 {% extends 'blog/base.html' %}
 {% block title %}Edit Profile | {{ block.super }}{% endblock %}
 {% block content %}
+{% include 'blog/alerts.html' %}
+
+    {% if post.author.profile.photo %}
+        <div class="row">
+            <div class="col-md-12 ">
+            <img src="{{ post.author.profile.photo.url }}" style="width:150px;height:150px;" class="navbar-img">
+            </div>
+        </div>
+
+        {% else %}
+        <div class="row">
+            <div class="col-md-12">
+                <img src="/media/default.jpg" style="width:150px;height:150px;" class="navbar-img">
+            </div>
+        </div>
+        {% endif %}
+
+
+
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ user_form.as_p }}

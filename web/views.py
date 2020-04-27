@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, Http404
-from .models import Post, Profile, Images, Comment
+from .models import Post, Profile, Images, Comment, Files
 from django.contrib.auth.decorators import login_required
 from .forms import *
 from django.contrib.auth import authenticate, login, logout
@@ -10,7 +10,8 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.template.loader import render_to_string
 from django.forms import modelformset_factory
 from django.contrib import messages
-from django.views.generic import ListView
+from django.contrib.messages.views import SuccessMessageMixin
+from django.views.generic import ListView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
@@ -139,13 +140,23 @@ def like_post(request):
 @login_required
 def post_create(request):
     ImageFormset = modelformset_factory(Images, fields=('image',), extra=4)
+    FileFormset = modelformset_factory(Files, fields=('file', 'cover'))
+
     if request.method == 'POST':
         form = PostCreateForm(request.POST)
         formset = ImageFormset(request.POST or None, request.FILES or None)
-        if form.is_valid() and formset.is_valid():
+        formfile = FileFormset(request.POST or None, request.FILES or None)
+        if form.is_valid() and formset.is_valid() and formfile.is_valid():
             post = form.save(commit=False)
             post.author = request.user
             post.save()
+
+            for f in formfile:
+                try:
+                    fileup = Files(post=post, file=f.cleaned_data['file'], cover=f.cleaned_data['cover'])
+                    fileup.save()
+                except Exception as e:
+                    break
 
             for f in formset:
                 try:
@@ -159,9 +170,12 @@ def post_create(request):
     else:
         form = PostCreateForm()
         formset = ImageFormset(queryset=Images.objects.none())
+        formfile = FileFormset(queryset=Files.objects.none())
+
     context = {
         'form': form,
         'formset': formset,
+        'fileform': formfile,
     }
     return render(request, 'blog/post_create.html', context)
 
@@ -176,6 +190,7 @@ def post_edit(request, pk):
         formset = ImageFormset(request.POST or None, request.FILES or None)
         if form.is_valid() and formset.is_valid():
             form.save()
+
             print(formset.cleaned_data)
             data = Images.objects.filter(post=post)
             for index, f in enumerate(formset):
@@ -274,6 +289,7 @@ def edit_profile(request):
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
+            messages.success(request, "Your Profile has been successfully updated.")
             return redirect('web:edit_profile')
     else:
         user_form = UserEditForm(instance=request.user)
@@ -317,3 +333,12 @@ class MyPost(LoginRequiredMixin, ListView):
     def get_queryset(self):
         user = get_object_or_404(User, username=self.request.user)
         return Post.objects.filter(author=user).order_by('-id')
+
+
+class FileUpdate(SuccessMessageMixin, UpdateView):
+    model = Files
+    fields = ('file', 'cover')
+    template_name = 'blog/file_update.html'
+    success_message = 'Your file has been successful changed'
+
+

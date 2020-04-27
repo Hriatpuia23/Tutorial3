@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.db.models.signals import pre_save, post_save, post_delete
 from django.dispatch import receiver
 from django.utils.text import slugify
+
 import os
 
 
@@ -91,6 +92,18 @@ class Images(models.Model):
 
     def _str_(self):
         return self.post.title + "Image"
+
+
+class Files(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    file = models.FileField(upload_to='files', blank=True, null=True)
+    cover = models.ImageField(upload_to='files/covers/', null=True, blank=True)
+
+    def get_absolute_url(self):
+        return reverse('web:update_file', kwargs={'pk': self.pk})
+
+    def _str_(self):
+        return self.post.title + "Files"
 
 
 # @receiver(post_delete, sender=Images)

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Post, Profile, Images, Comment
+from .models import Post, Profile, Images, Comment, Files
 
 
 class PostAdmin(admin.ModelAdmin):
@@ -19,8 +19,13 @@ class ImagesAdmin(admin.ModelAdmin):
     list_display = ('post', 'image')
 
 
+class FilesAdmin(admin.ModelAdmin):
+    list_display = ('post', 'file', 'cover')
+
+
 admin.site.register(Post, PostAdmin)
 admin.site.register(Profile, ProfileAdmin)
 admin.site.register(Images, ImagesAdmin)
 admin.site.register(Comment)
+admin.site.register(Files, FilesAdmin)
 # Register your models here.

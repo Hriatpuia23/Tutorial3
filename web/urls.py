@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import UserPostListView, MyPost
+from .views import UserPostListView, MyPost, FileUpdate
 from . import views
 
 
@@ -8,6 +8,7 @@ app_name = 'web'
 
 
 urlpatterns = [
+    path('<int:pk>/',FileUpdate.as_view(), name='update_file'),
     path('<str:username>/user/', UserPostListView.as_view(), name="user_posts"),
     path('my_post/', MyPost.as_view(), name="my_posts"),
     path('<int:pk>/post_edit/', views.post_edit, name="post_edit"),

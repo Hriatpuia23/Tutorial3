@@ -16,16 +16,31 @@
         <small>Post created by: {{ post.author }}</small>
         <hr>
         <center>{{ post.body|linebreaks }}</center>
+
         <a href="{{ post.url_address }}" target="_blank">{{ post.url_address }}</a>
         <div class="row gallery">
                 {% for p in post.images_set.all %}
-                {% if p.image %}}
+                {% if p.image %}
                         <div class="col-md-3">
                                 <img src="{{ p.image.url }}" alt="Images Not Found" class="img-thumbnail">
                         </div>
                 {% endif %}
                 {% endfor %}
         </div>
+
+          <p>
+              {% for p in post.files_set.all %}
+            {% if p.cover %}
+            <img src="{{p.cover.url}}" alt="{{p.title}}" style="width: 100px;height: 100"><br><br>
+            {% else %}
+            <span class="text-muted">{{post.title}}</span><br>
+            {% endif %}
+              {% if p.file %}
+            <a href="{{ p.file.url }}" class="btn btn-success">Download</a>
+            <a href="{% url 'web:update_file' p.pk %}">Change File</a>
+              {% endif %}
+              {% endfor %}
+          </p>
 
         <div class="row" class="collapse">
         <div id="like-section">
